@@ -6,7 +6,7 @@ from xml.dom import minidom
 import urllib.parse
 
 
-def generate_podcast_feed(book_title, input_dir, output_dir, base_url):
+def generate_podcast_feed(book_title, input_dir, output_dir, base_url, cover_image_url):
     rss = Element("rss", version="2.0")
     channel = SubElement(rss, "channel")
 
@@ -18,6 +18,14 @@ def generate_podcast_feed(book_title, input_dir, output_dir, base_url):
 
     description = SubElement(channel, "description")
     description.text = f"A TTS-generated audiobook of {book_title}"
+
+    image = SubElement(channel, "image")
+    image_url = SubElement(image, "url")
+    image_url.text = cover_image_url
+    image_title = SubElement(image, "title")
+    image_title.text = book_title
+    image_link = SubElement(image, "link")
+    image_link.text = base_url
 
     mp3_files = sorted(os.listdir(input_dir), key=lambda x: int(x.split('_')[1].split('.')[0]))
 
@@ -32,8 +40,7 @@ def generate_podcast_feed(book_title, input_dir, output_dir, base_url):
         with open(os.path.join(output_dir, text_filename), 'r', encoding='utf-8') as file:
             chapter_title = file.readline().strip()
 
-        mp3_url_path = mp3_filename.replace('\\', '/')
-        mp3_url = urljoin(base_url, mp3_url_path)
+        mp3_url = base_url + "/" + mp3_filename
 
         item = SubElement(channel, "item")
         item_title = SubElement(item, "title")
