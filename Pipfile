@@ -8,6 +8,7 @@ ebooklib = "*"
 bs4 = "*"
 gtts = "*"
 google = "*"
+eyed3 = "*"
 
 [dev-packages]
 
